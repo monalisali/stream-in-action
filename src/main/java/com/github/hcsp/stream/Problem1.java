@@ -42,12 +42,41 @@ public class Problem1 {
 
     // 编写一个方法，筛选出年龄大于等于60的用户，然后将他们按照年龄从大到小排序，将他们的名字放在一个LinkedList中返回
     public static LinkedList<String> collectNames(List<User> users) {
-        List<String> userList = users.stream().filter(u -> u.age >= 60)
-                .sorted(comparing(User::getAge).reversed())
-                .map(u -> u.getName())
-                .collect(Collectors.toList());
 
-        return new LinkedList(userList);
+        //1. 方法1：没有用到Collectors.toCollection
+//                List<String> userList = users.stream().filter(u -> u.age >= 60)
+//                .sorted(comparing(User::getAge).reversed())
+//                .map(u -> u.getName())
+//                .collect(Collectors.toList());
+//
+//        return new LinkedList(userList);
+
+
+        //2. 方法2： 没有简化成lambda
+//        return  users.stream().filter(u -> u.age >= 60)
+//                .sorted(comparing(User::getAge).reversed())
+//                .map(u -> u.getName())
+//                .collect(Collectors.toCollection(new Supplier<LinkedList<String>>() {
+//                    @Override
+//                    public LinkedList<String> get() {
+//                        return new LinkedList<>();
+//                    }
+//                }));
+
+        //3. 方法3：没有简化成方法引用
+//        return  users.stream().filter(u -> u.age >= 60)
+//                .sorted(comparing(User::getAge).reversed())
+//                .map(u -> u.getName())
+//                .collect(Collectors.toCollection(() -> new LinkedList<>()));
+
+        return  users.stream().filter(u -> u.age >= 60)
+                .sorted(comparing(User::getAge).reversed())
+                .map(User::getName)
+                .collect(Collectors.toCollection(LinkedList::new));
+
+
+
+
     }
 
     public static void main(String[] args) {
